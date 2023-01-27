@@ -1,4 +1,11 @@
-import { render, screen, fireEvent, getByText } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  getByText,
+  waitForElementToBeRemoved,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
@@ -19,10 +26,14 @@ describe("App component", () => {
 
     const button = screen.getByText("Adicionar");
     const input = screen.getByPlaceholderText("novo item");
+    const removeButton = screen.getAllByText("remover");
+    debug();
     const text = "Antonio";
     userEvent.type(input, text);
-    userEvent.click(button);
-
-    expect(await screen.findByText(text)).toBeInTheDocument();
+    userEvent.click(removeButton[0]);
+    debug();
+    await waitFor(() => {
+      expect(screen.queryByText("diego")).not.toBeInTheDocument();
+    });
   });
 });
